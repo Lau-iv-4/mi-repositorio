@@ -36,8 +36,6 @@ while intentos < max_intentos:
     else:
         # Este 'else' se ejecuta si los campos no están vacíos y las credenciales son incorrectas
         print(" ERROR: Nombre de usuario o contraseña incorrectos.")
-        
-    # --------------------------------------------------
 
 # --- Bloque de control final: Verificación de intentos agotados ---
 
@@ -46,5 +44,3 @@ while intentos < max_intentos:
 # Si el bucle terminó porque 'intentos' alcanzó 'max_intentos' (fracaso), se ejecuta este bloque.
 if intentos == max_intentos and not (usuario == usuario_correcto and clave == clave_correcta):
     print("\n ADVERTENCIA: Has agotado tus 3 intentos. El sistema se ha bloqueado.")
-
-# Fin del algoritmo
