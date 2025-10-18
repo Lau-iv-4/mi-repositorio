@@ -1,0 +1,142 @@
+## SISTEMA DE EVALUACION EJERCICIO 2
+def validar_entrada_no_vacia(mensaje):
+    """
+    Pide un dato al usuario y asegura que la entrada no esté vacía.
+    """
+    while True:
+        # Usa input() para obtener el dato del usuario
+        entrada = input(mensaje).strip() 
+        
+        if len(entrada) > 0: # Verifica que la longitud de la cadena sea mayor a cero
+            return entrada
+        else:
+            print(" Error: Este campo no puede dejarse en blanco. Intente de nuevo.")
+
+
+def sistema_evaluacion_sin_diccionarios():
+    """
+    Proceso principal del sistema: gestiona alumnos y calificaciones
+
+    """
+    # SOLICITAR Y VALIDAR EL NÚMERO DE ALUMNOS Y MATERIAS
+    
+    num_alumnos = 0
+    while num_alumnos <= 0:
+        entrada_alumnos = validar_entrada_no_vacia("Ingrese el número total de alumnos a evaluar: ")
+        
+        # Validación manual de número entero (chequeando si la entrada es un dígito)
+        if entrada_alumnos.isdigit():
+            num_alumnos = int(entrada_alumnos)
+            if num_alumnos <= 0:
+                 print(" Error: El número de alumnos debe ser mayor a cero.")
+        else:
+            print(" Error: Debe ingresar un número entero válido.")
+
+    num_materias = 0
+    while num_materias <= 0:
+        entrada_materias = validar_entrada_no_vacia("Ingrese el número total de materias: ")
+        
+        # Validación manual de número entero
+        if entrada_materias.isdigit():
+            num_materias = int(entrada_materias)
+            if num_materias <= 0:
+                print(" Error: El número de materias debe ser mayor a cero.")
+        else:
+            print(" Error: Debe ingresar un número entero válido.")
+
+    # Lista principal: Almacenará listas de datos de cada alumno.
+    # Formato de cada sub-lista: [Nombre, Matrícula, Aprobadas, Reprobadas, [Calificaciones...]]
+    historial_academico = []
+    
+    print("\n" + "=" * 50)
+    print("INICIO DEL REGISTRO DE ALUMNOS")
+    print("=" * 50)
+    
+    
+    #  BUCLE PRINCIPAL PARA REGISTRAR ALUMNOS
+  
+    for i in range(num_alumnos):
+        print(f"\n--- Datos del Alumno #{i + 1} ---")
+        
+        nombre = validar_entrada_no_vacia("Ingrese el nombre completo del alumno: ")
+        matricula = validar_entrada_no_vacia("Ingrese la matrícula del alumno: ")
+        
+        aprobadas = 0
+        reprobadas = 0
+        calificaciones_alumno = []
+        
+
+        # BUCLE PARA REGISTRAR CALIFICACIONES
+        
+        for j in range(num_materias):
+            while True:
+                # Pedimos el nombre de la materia
+                validar_entrada_no_vacia(f"  Ingrese el nombre de la Materia #{j + 1}: ")
+                
+                entrada_calificacion = validar_entrada_no_vacia(f"  Ingrese la calificación (0 a 10) para {nombre}: ")
+                
+                calificacion = -1.0 # Usamos un valor fuera del rango como inicial
+                
+                # Validación manual de número flotante (simulando un float)
+                # Esta es una simplificación, ya que manejar todos los formatos de float es complejo sin librerías/try.
+                if entrada_calificacion.replace('.', '', 1).isdigit():
+                    calificacion = float(entrada_calificacion)
+                
+                # Validar que la calificación sea numérica y esté en el rango de 0 a 10
+                if 0.0 <= calificacion <= 10.0:
+                    break # Calificación válida, sale del bucle interno
+                else:
+                    print(" Error: Debe ingresar un valor numérico válido (0 a 10) para la calificación.")
+        
+            # Guardamos la calificación
+            calificaciones_alumno.append(calificacion)
+            
+            
+            # CONDICIÓN DE EVALUACIÓN (Aprobado > 6)
+        
+            if calificacion > 6.0:
+                aprobadas += 1
+            else:
+                reprobadas += 1
+                
+        # 5. Almacenar todos los datos del alumno como una lista
+        # [0: Nombre, 1: Matrícula, 2: Aprobadas, 3: Reprobadas, 4: Calificaciones_lista]
+        datos_alumno = [
+            nombre,
+            matricula,
+            aprobadas,
+            reprobadas,
+            calificaciones_alumno
+        ]
+        historial_academico.append(datos_alumno)
+
+    # MOSTRAR EL REPORTE FINAL
+    
+    print("\n" + "=" * 50)
+    print("REPORTE DE EVALUACIÓN FINAL")
+    print("=" * 50)
+    
+    # Recorrer la lista principal (historial_academico)
+    for alumno in historial_academico:
+        
+        # Acceder a los datos usando los índices de la lista
+        nombre_reporte = alumno[0]
+        matricula_reporte = alumno[1]
+        aprobadas_reporte = alumno[2]
+        reprobadas_reporte = alumno[3]
+        
+        # Calcular el estado final
+        if aprobadas_reporte > reprobadas_reporte:
+            estado_final = "APROBADO"
+        else:
+            estado_final = "REPROBADO"
+            
+        print(f"\n[ALUMNO] {nombre_reporte.upper()}")
+        print(f"  Matrícula: {matricula_reporte}")
+        print(f"  Materias Aprobadas: {aprobadas_reporte}")
+        print(f"  Materias Reprobadas: {reprobadas_reporte}")
+        print(f"  ESTADO FINAL: {estado_final}")
+
+# Ejecutar el sistema
+if __name__ == "__main__":
+    sistema_evaluacion ()
