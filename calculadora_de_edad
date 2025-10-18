@@ -1,0 +1,138 @@
+##calculadora de edad
+def es_fecha_valida(dia, mes, anio):
+    
+    
+    es_valida = True
+    dias_en_mes = 0
+    
+    # Verificar Mes: Debe estar entre 1 y 12.
+    if mes < 1 or mes > 12:
+        es_valida = False
+    
+    # Verificar Día: Debe estar entre 1 y 31.
+    elif dia < 1 or dia > 31:
+        es_valida = False
+        
+    else:
+        # Determinar la cantidad correcta de días para el mes.
+        if mes in [1, 3, 5, 7, 8, 10, 12]:
+            dias_en_mes = 31 # Meses con 31 días
+        elif mes in [4, 6, 9, 11]:
+            dias_en_mes = 30 # Meses con 30 días
+        elif mes == 2:
+            # Lógica para Años Bisiestos (Febrero)
+            # Un año es bisiesto si es divisible por 4 Y no por 100, O si es divisible por 400.
+            if (anio % 4 == 0 and anio % 100 != 0) or (anio % 400 == 0):
+                dias_en_mes = 29 # Bisiesto
+            else:
+                dias_en_mes = 28 # No bisiesto
+        
+        # Verificar que el día ingresado no exceda el límite del mes.
+        if dia > dias_en_mes:
+            es_valida = False
+            
+    return es_valida
+
+
+
+
+def calcular_edad_completo():
+    """
+    Proceso principal: solicita fechas con input(), valida y calcula la edad.
+    """
+    
+    # Inicialización de variables
+    dia_actual, mes_actual, anio_actual = 0, 0, 0
+    dia_nac, mes_nac, anio_nac = 0, 0, 0
+    edad = 0
+    
+    fecha_valida = False
+    seguir_intentando = True
+
+    # LECTURA Y VALIDACIÓN DE LA FECHA ACTUAL 
+    while seguir_intentando:
+        print("-" * 50)
+        print("Ingrese la fecha ACTUAL (formato DD MM AAAA):")
+        fecha_actual_cadena = input().strip() # Usa input() para leer datos
+        
+        if len(fecha_actual_cadena) == 10 and fecha_actual_cadena[2] == ' ' and fecha_actual_cadena[5] == ' ':
+            try:
+                # Extracción de subcadenas a entero (Slicing):
+                dia_actual = int(fecha_actual_cadena[0:2])
+                mes_actual = int(fecha_actual_cadena[3:5])
+                anio_actual = int(fecha_actual_cadena[6:10])
+
+                if es_fecha_valida(dia_actual, mes_actual, anio_actual):
+                    seguir_intentando = False
+                else:
+                    print("Error: La fecha actual ingresada no es válida (Ej: mes 13).")
+            
+            except ValueError:
+                print("Error: Los componentes de la fecha deben ser números.")
+        else:
+            print("Error: Formato incorrecto. Debe ser DD MM AAAA.")
+
+    #   LECTURA Y VALIDACIÓN DE LA FECHA DE NACIMIENTO 
+    seguir_intentando = True
+    while seguir_intentando:
+        print("-" * 50)
+        print("Ingrese su fecha de nacimiento (formato DD MM AAAA):")
+        fecha_nacimiento_cadena = input().strip() # Usa input()
+        
+        if len(fecha_nacimiento_cadena) == 10 and fecha_nacimiento_cadena[2] == ' ' and fecha_nacimiento_cadena[5] == ' ':
+            try:
+                # Extracción de la fecha de nacimiento (Slicing)
+                dia_nac = int(fecha_nacimiento_cadena[0:2])
+                mes_nac = int(fecha_nacimiento_cadena[3:5])
+                anio_nac = int(fecha_nacimiento_cadena[6:10])
+                
+                fecha_valida = es_fecha_valida(dia_nac, mes_nac, anio_nac)
+                
+                #  Validaciones de Reglas 
+                if fecha_valida:
+                    if anio_nac <= 1900:
+                        fecha_valida = False
+                        print("Error: El año de nacimiento debe ser posterior a 1900.")
+                    elif anio_nac > anio_actual:
+                        fecha_valida = False
+                        print("Error: El año de nacimiento no puede ser en el futuro.")
+                    elif anio_nac == anio_actual:
+                        if mes_nac > mes_actual:
+                            fecha_valida = False
+                            print("Error: El mes de nacimiento no puede ser posterior al mes actual del mismo año.")
+                        elif mes_nac == mes_actual and dia_nac > dia_actual:
+                            fecha_valida = False
+                            print("Error: El día de nacimiento no puede ser posterior al día actual del mismo mes y año.")
+
+                if fecha_valida:
+                    seguir_intentando = False
+                else:
+                    print("Error: Fecha de nacimiento no válida. Intente de nuevo.")
+            
+            except ValueError:
+                print("Error: Los componentes de la fecha deben ser números.")
+        else:
+            print("Error: Formato incorrecto. Debe ser DD MM AAAA (ej. 01 01 2000).")
+
+    # CÁLCULO DE LA EDAD  
+    edad = anio_actual - anio_nac
+
+    # Ajuste de edad si el cumpleaños aún no ha pasado
+    if mes_actual < mes_nac:
+        edad = edad - 1
+    elif mes_actual == mes_nac:
+        if dia_actual < dia_nac:
+            edad = edad - 1
+
+    #  MOSTRAR RESULTADOS 
+    print("-" * 50)
+    print(f"Su fecha de nacimiento es: {dia_nac}/{mes_nac}/{anio_nac}")
+    print(f"La fecha actual es: {dia_actual}/{mes_actual}/{anio_actual}")
+    print(f"Su edad es: {edad} años.")
+    
+  
+    
+
+# Ejecución del programa
+if __name__ == "__main__":
+    calcular_edad_completo()
